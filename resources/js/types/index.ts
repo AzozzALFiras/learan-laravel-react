@@ -41,3 +41,44 @@ export interface User {
     updated_at: string;
     [key: string]: unknown;
 }
+
+export interface ProductCategory {
+    id: number;
+    name_ar: string;
+    name_en: string;
+    slug?: string;
+    products_count?: number;
+    created_at?: string;
+}
+
+export type LicenseStatus = 'available' | 'sold';
+
+export interface ProductRow {
+    id: number;
+    name_ar: string;
+    name_en: string;
+    price: number;
+    is_active: boolean;
+    image_url: string | null;
+    available_stock: number;
+    category: { id: number; name_ar: string; name_en: string } | null;
+    created_at: string;
+}
+
+export interface ProductLicenseRow {
+    id: number;
+    license_key: string;
+    status: LicenseStatus;
+    sold_at: string | null;
+    created_at: string;
+}
+
+export interface Paginated<T> {
+    data: T[];
+    total: number;
+    per_page: number;
+    current_page: number;
+    last_page: number;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+}

@@ -35,6 +35,26 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::patch('/{user}',     Admin\Users\UpdateController::class) ->name('update');
         Route::delete('/{user}',    Admin\Users\DestroyController::class)->name('destroy');
     });
+
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('/',              Admin\Categories\IndexController::class)  ->name('index');
+        Route::post('/',             Admin\Categories\StoreController::class)  ->name('store');
+        Route::patch('/{category}',  Admin\Categories\UpdateController::class) ->name('update');
+        Route::delete('/{category}', Admin\Categories\DestroyController::class)->name('destroy');
+    });
+
+    Route::prefix('products')->name('products.')->group(function () {
+        Route::get('/',                    Admin\Products\IndexController::class)  ->name('index');
+        Route::get('/create',              Admin\Products\CreateController::class) ->name('create');
+        Route::post('/',                   Admin\Products\StoreController::class)  ->name('store');
+        Route::get('/{product}/edit',      Admin\Products\EditController::class)   ->name('edit');
+        Route::match(['patch', 'post'], '/{product}', Admin\Products\UpdateController::class)->name('update');
+        Route::delete('/{product}',        Admin\Products\DestroyController::class)->name('destroy');
+
+        Route::get('/{product}/licenses',    Admin\Products\Licenses\IndexController::class)  ->name('licenses.index');
+        Route::post('/{product}/licenses',   Admin\Products\Licenses\StoreController::class)  ->name('licenses.store');
+        Route::delete('/licenses/{license}', Admin\Products\Licenses\DestroyController::class)->name('licenses.destroy');
+    });
 });
 
 require __DIR__.'/settings.php';
