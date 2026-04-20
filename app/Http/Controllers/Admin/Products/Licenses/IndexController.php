@@ -14,6 +14,16 @@ class IndexController extends Controller
 {
     public function __invoke(Request $request, Product $product): Response
     {
+        $filters = [
+            'search'    => $request->string('search')->trim()->value() ?: null,
+            'status'    => in_array($request->status, [LicenseStatus::Available->value, LicenseStatus::Sold->value], true)
+                ? $request->status
+                : null,
+            'date_from' => $request->date('date_from')?->toDateString(),
+            'date_to'   => $request->date('date_to')?->toDateString(),
+            'sort'      => in_array($request->sort, ['newest', 'oldest', 'sold_at'], true) ? $request->sort : 'newest',
+        ];
+
         $counts = ProductLicense::query()
             ->where('product_id', $product->id)
             ->selectRaw('status, COUNT(*) as c')
@@ -34,14 +44,17 @@ class IndexController extends Controller
                 'sold'      => $sold,
                 'total'     => $available + $sold,
             ],
+            'filters' => $filters,
             'licenses' => Inertia::defer(fn () =>
                 ProductLicense::query()
                     ->where('product_id', $product->id)
-                    ->when(
-                        $request->status && in_array($request->status, [LicenseStatus::Available->value, LicenseStatus::Sold->value], true),
-                        fn ($q) => $q->where('status', $request->status)
-                    )
-                    ->latest()
+                    ->when($filters['status'], fn ($q, $s) => $q->where('status', $s))
+                    ->when($filters['search'], fn ($q, $s) => $q->where('license_key', 'like', "%{$s}%"))
+                    ->when($filters['date_from'], fn ($q, $d) => $q->whereDate('created_at', '>=', $d))
+                    ->when($filters['date_to'], fn ($q, $d) => $q->whereDate('created_at', '<=', $d))
+                    ->when($filters['sort'] === 'oldest', fn ($q) => $q->oldest())
+                    ->when($filters['sort'] === 'sold_at', fn ($q) => $q->orderByDesc('sold_at'))
+                    ->when($filters['sort'] === 'newest', fn ($q) => $q->latest())
                     ->paginate(25)
                     ->withQueryString()
                     ->through(fn (ProductLicense $l) => [
@@ -52,7 +65,6 @@ class IndexController extends Controller
                         'created_at'  => $l->created_at->toDateString(),
                     ])
             ),
-            'filters' => $request->only('status'),
         ]);
     }
 }

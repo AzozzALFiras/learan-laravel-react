@@ -33,14 +33,16 @@ export default function AdminProductsEdit({ product, categories }: Props) {
             <Head title={`Edit ${product.name_en} — Admin`} />
             <div className="flex h-full flex-1 flex-col gap-6 p-6">
                 <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-sm">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20">
                         <Pencil className="h-6 w-6" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100" dir="rtl">
-                            تعديل: {product.name_ar}
+                        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+                            Edit · {product.name_en}
                         </h1>
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400">{product.name_en}</p>
+                        <p dir="rtl" className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
+                            {product.name_ar}
+                        </p>
                     </div>
                 </div>
 
@@ -58,7 +60,7 @@ export default function AdminProductsEdit({ product, categories }: Props) {
                     initialImageUrl={product.image_url}
                     submitUrl={`/admin/products/${product.id}`}
                     submitMethod="patch"
-                    submitLabel="حفظ التعديلات"
+                    submitLabel="Save changes"
                 />
             </div>
         </AppLayout>

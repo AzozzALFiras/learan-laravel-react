@@ -20,13 +20,15 @@ export default function AdminProductsCreate({ categories }: Props) {
             <Head title="New Product — Admin" />
             <div className="flex h-full flex-1 flex-col gap-6 p-6">
                 <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-sm">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
                         <PackagePlus className="h-6 w-6" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">إضافة منتج جديد</h1>
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                            املأ الحقول باللغتين وارفع صورة المنتج.
+                        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+                            New product
+                        </h1>
+                        <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
+                            Create a bilingual product and upload its cover image.
                         </p>
                     </div>
                 </div>
@@ -35,7 +37,7 @@ export default function AdminProductsCreate({ categories }: Props) {
                     categories={categories}
                     submitUrl="/admin/products"
                     submitMethod="post"
-                    submitLabel="حفظ المنتج"
+                    submitLabel="Create product"
                 />
             </div>
         </AppLayout>

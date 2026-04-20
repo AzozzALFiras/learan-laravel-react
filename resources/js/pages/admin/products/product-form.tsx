@@ -1,7 +1,7 @@
 import { type ProductCategory } from '@/types';
-import { Link, router } from '@inertiajs/react';
 import type { FormDataConvertible } from '@inertiajs/core';
-import { ImagePlus, Languages, X } from 'lucide-react';
+import { Link, router } from '@inertiajs/react';
+import { DollarSign, FolderTree, ImagePlus, Languages, X } from 'lucide-react';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 
 export interface ProductFormValues {
@@ -24,7 +24,14 @@ interface Props {
     submitLabel: string;
 }
 
-export default function ProductForm({ categories, initial, initialImageUrl, submitUrl, submitMethod, submitLabel }: Props) {
+export default function ProductForm({
+    categories,
+    initial,
+    initialImageUrl,
+    submitUrl,
+    submitMethod,
+    submitLabel,
+}: Props) {
     const [values, setValues] = useState<ProductFormValues>({
         product_category_id: initial?.product_category_id ?? '',
         name_ar: initial?.name_ar ?? '',
@@ -38,7 +45,7 @@ export default function ProductForm({ categories, initial, initialImageUrl, subm
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [processing, setProcessing] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(initialImageUrl ?? null);
-    const [lang, setLang] = useState<'ar' | 'en'>('ar');
+    const [lang, setLang] = useState<'en' | 'ar'>('en');
     const [dragging, setDragging] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -88,219 +95,273 @@ export default function ProductForm({ categories, initial, initialImageUrl, subm
     return (
         <form onSubmit={submit} className="grid gap-6 lg:grid-cols-[1fr_360px]">
             <div className="space-y-6">
-                <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-                    <div className="mb-4 flex items-center gap-2 border-b border-zinc-100 pb-3 dark:border-zinc-800">
-                        <Languages className="h-4 w-4 text-zinc-400" />
-                        <button
-                            type="button"
-                            onClick={() => setLang('ar')}
-                            className={`rounded-md px-3 py-1 text-xs font-medium ${
-                                lang === 'ar'
-                                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                                    : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
-                            }`}
-                        >
-                            عربي
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setLang('en')}
-                            className={`rounded-md px-3 py-1 text-xs font-medium ${
-                                lang === 'en'
-                                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                                    : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
-                            }`}
-                        >
-                            English
-                        </button>
+                {/* Localized content card */}
+                <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+                    <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-3 dark:border-zinc-800">
+                        <div className="flex items-center gap-2">
+                            <Languages className="h-4 w-4 text-zinc-400" />
+                            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">Localized content</h3>
+                        </div>
+                        <div className="flex items-center gap-0.5 rounded-lg border border-zinc-300 p-0.5 dark:border-zinc-700">
+                            <button
+                                type="button"
+                                onClick={() => setLang('en')}
+                                className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    lang === 'en'
+                                        ? 'bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900'
+                                        : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
+                                }`}
+                            >
+                                English
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setLang('ar')}
+                                className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                                    lang === 'ar'
+                                        ? 'bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900'
+                                        : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
+                                }`}
+                            >
+                                Arabic
+                            </button>
+                        </div>
                     </div>
 
-                    {lang === 'ar' ? (
-                        <div className="space-y-4" dir="rtl">
-                            <div>
-                                <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                                    اسم المنتج
-                                </label>
-                                <input
-                                    type="text"
-                                    value={values.name_ar}
-                                    onChange={(e) => update('name_ar', e.target.value)}
-                                    className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-                                />
-                                {errors.name_ar && <p className="mt-1 text-xs text-red-600">{errors.name_ar}</p>}
+                    <div className="px-5 py-5">
+                        {lang === 'en' ? (
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-600 dark:text-zinc-400">
+                                        Product name (English)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={values.name_en}
+                                        onChange={(e) => update('name_en', e.target.value)}
+                                        placeholder="e.g. Adobe Photoshop License"
+                                        className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-100 dark:focus:ring-zinc-100"
+                                    />
+                                    {errors.name_en && (
+                                        <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.name_en}</p>
+                                    )}
+                                </div>
+                                <div>
+                                    <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-600 dark:text-zinc-400">
+                                        Description (English)
+                                    </label>
+                                    <textarea
+                                        rows={6}
+                                        value={values.description_en}
+                                        onChange={(e) => update('description_en', e.target.value)}
+                                        placeholder="Describe what customers get with this product…"
+                                        className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-100 dark:focus:ring-zinc-100"
+                                    />
+                                    {errors.description_en && (
+                                        <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.description_en}</p>
+                                    )}
+                                </div>
                             </div>
-                            <div>
-                                <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                                    وصف المنتج
-                                </label>
-                                <textarea
-                                    rows={6}
-                                    value={values.description_ar}
-                                    onChange={(e) => update('description_ar', e.target.value)}
-                                    className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-                                />
-                                {errors.description_ar && <p className="mt-1 text-xs text-red-600">{errors.description_ar}</p>}
+                        ) : (
+                            <div className="space-y-4" dir="rtl">
+                                <div>
+                                    <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-600 dark:text-zinc-400">
+                                        Product name (Arabic)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={values.name_ar}
+                                        onChange={(e) => update('name_ar', e.target.value)}
+                                        placeholder="مثال: رخصة Adobe Photoshop"
+                                        className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-100 dark:focus:ring-zinc-100"
+                                    />
+                                    {errors.name_ar && (
+                                        <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.name_ar}</p>
+                                    )}
+                                </div>
+                                <div>
+                                    <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-600 dark:text-zinc-400">
+                                        Description (Arabic)
+                                    </label>
+                                    <textarea
+                                        rows={6}
+                                        value={values.description_ar}
+                                        onChange={(e) => update('description_ar', e.target.value)}
+                                        placeholder="اكتب وصف المنتج هنا…"
+                                        className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-100 dark:focus:ring-zinc-100"
+                                    />
+                                    {errors.description_ar && (
+                                        <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.description_ar}</p>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            <div>
-                                <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                                    Product name
-                                </label>
-                                <input
-                                    type="text"
-                                    value={values.name_en}
-                                    onChange={(e) => update('name_en', e.target.value)}
-                                    className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-                                />
-                                {errors.name_en && <p className="mt-1 text-xs text-red-600">{errors.name_en}</p>}
-                            </div>
-                            <div>
-                                <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                                    Description
-                                </label>
-                                <textarea
-                                    rows={6}
-                                    value={values.description_en}
-                                    onChange={(e) => update('description_en', e.target.value)}
-                                    className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-                                />
-                                {errors.description_en && <p className="mt-1 text-xs text-red-600">{errors.description_en}</p>}
-                            </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
 
-                <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-                    <h3 className="mb-4 text-sm font-semibold text-zinc-900 dark:text-zinc-100">التفاصيل</h3>
-                    <div className="grid gap-4 sm:grid-cols-2">
+                {/* Details card */}
+                <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+                    <div className="border-b border-zinc-200 px-5 py-3 dark:border-zinc-800">
+                        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">Details</h3>
+                    </div>
+                    <div className="grid gap-4 px-5 py-5 sm:grid-cols-2">
                         <div>
-                            <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                                القسم
-                            </label>
-                            <select
-                                value={values.product_category_id}
-                                onChange={(e) => update('product_category_id', e.target.value ? Number(e.target.value) : '')}
-                                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-                            >
-                                <option value="">— اختر قسمًا —</option>
-                                {categories.map((c) => (
-                                    <option key={c.id} value={c.id}>
-                                        {c.name_ar} — {c.name_en}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.product_category_id && <p className="mt-1 text-xs text-red-600">{errors.product_category_id}</p>}
-                        </div>
-                        <div>
-                            <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                                السعر (USD)
+                            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-600 dark:text-zinc-400">
+                                Category
                             </label>
                             <div className="relative">
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-400">$</span>
+                                <FolderTree className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+                                <select
+                                    value={values.product_category_id}
+                                    onChange={(e) =>
+                                        update('product_category_id', e.target.value ? Number(e.target.value) : '')
+                                    }
+                                    className="w-full appearance-none rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-3 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-100 dark:focus:ring-zinc-100"
+                                >
+                                    <option value="">— Select a category —</option>
+                                    {categories.map((c) => (
+                                        <option key={c.id} value={c.id}>
+                                            {c.name_en}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            {errors.product_category_id && (
+                                <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+                                    {errors.product_category_id}
+                                </p>
+                            )}
+                        </div>
+                        <div>
+                            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-zinc-600 dark:text-zinc-400">
+                                Price (USD)
+                            </label>
+                            <div className="relative">
+                                <DollarSign className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
                                 <input
                                     type="number"
                                     step="0.01"
                                     min="0"
                                     value={values.price}
-                                    onChange={(e) => update('price', e.target.value === '' ? '' : Number(e.target.value))}
-                                    className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-7 pr-3 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                                    onChange={(e) =>
+                                        update('price', e.target.value === '' ? '' : Number(e.target.value))
+                                    }
+                                    placeholder="0.00"
+                                    className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-3 text-sm text-zinc-900 placeholder-zinc-400 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-100 dark:focus:ring-zinc-100"
                                 />
                             </div>
-                            {errors.price && <p className="mt-1 text-xs text-red-600">{errors.price}</p>}
+                            {errors.price && (
+                                <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.price}</p>
+                            )}
                         </div>
                     </div>
-                    <label className="mt-4 flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-                        <input
-                            type="checkbox"
-                            checked={values.is_active}
-                            onChange={(e) => update('is_active', e.target.checked)}
-                            className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900"
-                        />
-                        المنتج نشط (ظاهر للعملاء)
-                    </label>
+                    <div className="border-t border-zinc-100 px-5 py-4 dark:border-zinc-800">
+                        <label className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
+                            <input
+                                type="checkbox"
+                                checked={values.is_active}
+                                onChange={(e) => update('is_active', e.target.checked)}
+                                className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 dark:border-zinc-600 dark:bg-zinc-800"
+                            />
+                            <span>
+                                <span className="block font-medium text-zinc-900 dark:text-zinc-100">
+                                    Product is active
+                                </span>
+                                <span className="block text-xs text-zinc-500 dark:text-zinc-400">
+                                    Active products are visible to customers in the storefront.
+                                </span>
+                            </span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
+            {/* Sidebar: image + submit */}
             <div className="space-y-4">
-                <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-                    <h3 className="mb-4 text-sm font-semibold text-zinc-900 dark:text-zinc-100">صورة المنتج</h3>
-
-                    {imagePreview ? (
-                        <div className="relative overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
-                            <img src={imagePreview} alt="preview" className="h-48 w-full object-cover" />
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    handleImageFile(null);
-                                    if (fileInputRef.current) fileInputRef.current.value = '';
+                <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+                    <div className="border-b border-zinc-200 px-5 py-3 dark:border-zinc-800">
+                        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">Product image</h3>
+                    </div>
+                    <div className="px-5 py-5">
+                        {imagePreview ? (
+                            <div className="relative overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+                                <img src={imagePreview} alt="preview" className="h-48 w-full object-cover" />
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        handleImageFile(null);
+                                        if (fileInputRef.current) fileInputRef.current.value = '';
+                                    }}
+                                    className="absolute right-2 top-2 rounded-full bg-black/60 p-1 text-white backdrop-blur hover:bg-black/80"
+                                >
+                                    <X className="h-4 w-4" />
+                                </button>
+                            </div>
+                        ) : (
+                            <label
+                                onDragOver={(e) => {
+                                    e.preventDefault();
+                                    setDragging(true);
                                 }}
-                                className="absolute right-2 top-2 rounded-full bg-black/60 p-1 text-white hover:bg-black/80"
+                                onDragLeave={() => setDragging(false)}
+                                onDrop={handleDrop}
+                                className={`flex h-48 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed transition-colors ${
+                                    dragging
+                                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30'
+                                        : 'border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800/50'
+                                }`}
                             >
-                                <X className="h-4 w-4" />
-                            </button>
-                        </div>
-                    ) : (
-                        <label
-                            onDragOver={(e) => {
-                                e.preventDefault();
-                                setDragging(true);
-                            }}
-                            onDragLeave={() => setDragging(false)}
-                            onDrop={handleDrop}
-                            className={`flex h-48 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed transition-colors ${
-                                dragging
-                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30'
-                                    : 'border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800/50'
-                            }`}
-                        >
-                            <ImagePlus className="h-8 w-8 text-zinc-400" />
-                            <p className="text-sm text-zinc-600 dark:text-zinc-400">اسحب الصورة هنا أو اضغط لاختيار ملف</p>
-                            <p className="text-xs text-zinc-400">JPG / PNG / WebP — حتى 2MB</p>
-                            <input
-                                ref={fileInputRef}
-                                type="file"
-                                accept="image/jpeg,image/png,image/webp"
-                                onChange={handleFileChange}
-                                className="hidden"
-                            />
-                        </label>
-                    )}
-                    {imagePreview && (
-                        <>
-                            <button
-                                type="button"
-                                onClick={() => fileInputRef.current?.click()}
-                                className="mt-3 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                            >
-                                استبدال الصورة
-                            </button>
-                            <input
-                                ref={fileInputRef}
-                                type="file"
-                                accept="image/jpeg,image/png,image/webp"
-                                onChange={handleFileChange}
-                                className="hidden"
-                            />
-                        </>
-                    )}
-                    {errors.image && <p className="mt-2 text-xs text-red-600">{errors.image}</p>}
+                                <ImagePlus className="h-8 w-8 text-zinc-400" />
+                                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                                    Drag image here, or click to upload
+                                </p>
+                                <p className="text-xs text-zinc-400">JPG / PNG / WebP · up to 2MB</p>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/jpeg,image/png,image/webp"
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                />
+                            </label>
+                        )}
+                        {imagePreview && (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="mt-3 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+                                >
+                                    Replace image
+                                </button>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/jpeg,image/png,image/webp"
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                />
+                            </>
+                        )}
+                        {errors.image && (
+                            <p className="mt-2 text-xs text-red-600 dark:text-red-400">{errors.image}</p>
+                        )}
+                    </div>
                 </div>
 
                 <div className="flex gap-2">
                     <button
                         type="submit"
                         disabled={processing}
-                        className="flex-1 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300 disabled:opacity-50"
+                        className="flex-1 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
                     >
-                        {processing ? 'جاري الحفظ…' : submitLabel}
+                        {processing ? 'Saving…' : submitLabel}
                     </button>
                     <Link
                         href="/admin/products"
-                        className="rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                        className="rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
                     >
-                        إلغاء
+                        Cancel
                     </Link>
                 </div>
             </div>
